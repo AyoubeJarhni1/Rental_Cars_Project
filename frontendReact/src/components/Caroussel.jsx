@@ -3,28 +3,28 @@ import React, { useState } from "react";
 function CarCarousel() {
   const slides = [
     {
-      title: "Tesla Model S",
+      title: "Dacia",
       description:
-        "Découvrez la Tesla Model S, une voiture électrique révolutionnaire alliant puissance, autonomie et technologie de pointe.",
-      image: "/daci.jpg",
+        "Dacia is known for its affordable and reliable cars, perfect for those seeking great value for money.",
+      image: "/dacia.png", 
     },
     {
-      title: "BMW Série 5",
+      title: "Renault Clio",
       description:
-        "La BMW Série 5 offre un mélange parfait de luxe, de performances et de design raffiné.",
-      image: "/ford.jpg",
+        "The Renault Clio offers a modern design, balanced performance, and advanced technology.",
+      image: "/clio.jpg", 
     },
     {
-      title: "Audi Q7",
+      title: "Renault Mégane",
       description:
-        "L'Audi Q7 est un SUV spacieux avec un intérieur premium et des fonctionnalités avancées pour une expérience de conduite incomparable.",
-      image: "/clio.jpg",
+        "The Renault Mégane combines comfort, technology, and performance, making it perfect for families or sports enthusiasts.",
+      image: "/megane1.png", 
     },
     {
-      title: "Ford Mustang GT",
+      title: "KIA",
       description:
-        "La Ford Mustang GT incarne la puissance et le style emblématique des voitures sportives américaines.",
-      image: "/ford_mustang_gt.png",
+        "KIA offers modern and innovative vehicles with a long warranty and excellent value for money.",
+      image: "/kia.jpg", 
     },
   ];
 
@@ -43,10 +43,13 @@ function CarCarousel() {
   };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto bg-gradient-to-r from-gray-700 via-gray-900 to-black rounded-lg shadow-lg overflow-hidden">
+    
+      
+    <div id="home-carousel" className=" home relative w-full mb-3  max-w-8xl mt-24 pt-8 mx-auto bg-[#EDEEF6] rounded-lg shadow-lg overflow-hidden">
+    <h2 className="  text-4xl font-bold text-[#0977BE] pb-6 py-3 "> Our cars </h2>
       <div className="flex items-center justify-between">
         <button
-          className="p-2 ml-8 text-white bg-gray-800 rounded-full hover:bg-gray-700"
+          className="p-3 ml-8 text-white bg-[#0977BE] rounded-full hover:bg-[#93AEF5]"
           onClick={prevSlide}
         >
           &lt;
@@ -54,15 +57,15 @@ function CarCarousel() {
 
         <div className="flex-1 p-4 text-center flex flex-col md:flex-row items-center justify-between">
           <div className="w-full md:w-1/2 p-4 ml-8">
-            <h2 className="text-4xl font-extrabold mb-2 text-white">
+            <h2 className="text-3xl font-bold mb-2 text-[#0977BE]">
               {slides[currentIndex].title}
             </h2>
-            <p className="text-gray-300 mb-4">
+            <p className="text-grey-700 font-medium mb-4">
               {slides[currentIndex].description}
             </p>
             <a
-              href="/details"
-              className="inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              href="https://www.wandaloo.com/autonews/"
+              className="inline-block bg-[#0977BE] text-white py-2 px-4 rounded-lg hover:bg-[#93AEF5] transition duration-300"
             >
               En savoir plus
             </a>
@@ -71,19 +74,20 @@ function CarCarousel() {
             <img
               src={slides[currentIndex].image}
               alt={slides[currentIndex].title}
-              className="w-full h-auto rounded-lg shadow-lg"
+              className="w-50 h-50 rounded-lg shadow-lg"
             />
           </div>
         </div>
 
         <button
-          className="p-2 mr-8 text-white bg-gray-800 rounded-full hover:bg-gray-700"
+          className="p-3 mr-8 text-white bg-[#0977BE] rounded-full hover:bg-[#93AEF5]"
           onClick={nextSlide}
         >
           &gt;
         </button>
       </div>
     </div>
+   
   );
 }
 

@@ -64,7 +64,7 @@ const NavBar = () => {
         {/* Boutons Login et Signup alignés à droite */}
         <div className="flex items-center space-x-6 ml-auto">
           <a
-            href="#login"
+            href="/login"
             className="text-white bg-[#0977BE] hover:bg-[#637BE4] px-6 py-2 rounded-xl transition duration-300"
           >
             Login

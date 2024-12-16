@@ -1,38 +1,49 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import axios from 'axios'; 
+import { Navigate } from 'react-router-dom';
 
 const SignUp = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
-  const onSubmit = data => {
+  const onSubmit = async (data) => {
     console.log(data); 
+
+    const requestData = {
+      name: data.name,
+      password: data.password,
+      email: data.email,
+      address: data.address,
+      dateNaiss: data.dateNaiss,
+      nTele: data.nTele,
+      role: data.role, 
+    };
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/auth/signup", requestData);
+      console.log("Réponse du serveur:", response.data); 
+      alert("Inscription réussie!");
+     
+    } catch (error) {
+      console.error("Erreur lors de l'inscription:", error); 
+      alert("Erreur lors de l'inscription.");
+    }
   };
 
-  const password = watch("password", "");  
   return (
     <div className="max-w-xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
-        <h4 className="text-2xl font-small text-center text-grey mb-6">Welocome to you space adminitrators when you can manage your services</h4>
       <h2 className="text-3xl font-bold text-center text-[#0977BE] mb-6">Sign Up</h2>
-      
+
       <form onSubmit={handleSubmit(onSubmit)}>
+       
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <label className="block text-sm font-medium text-gray-700">Username</label>
           <input
             type="text"
             className="w-full p-3 border border-gray-300 rounded-lg"
-            {...register("fullName", { required: "Full name is required" })}
+            {...register("name", { required: "Username is required" })}
           />
-          {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName.message}</p>}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Phone</label>
-          <input
-            type="Phone"
-            className="w-full p-3 border border-gray-300 rounded-lg"
-            {...register("phone", { required: "Phone is required" })}
-          />
-          
+          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
 
         <div className="mb-4">
@@ -43,6 +54,36 @@ const SignUp = () => {
             {...register("email", { required: "Email is required" })}
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Address</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            {...register("address", { required: "Address is required" })}
+          />
+          {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+          <input
+            type="date"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            {...register("dateNaiss", { required: "Date of Birth is required" })}
+          />
+          {errors.dateNaiss && <p className="text-red-500 text-sm">{errors.dateNaiss.message}</p>}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            {...register("nTele", { required: "Phone number is required" })}
+          />
+          {errors.nTele && <p className="text-red-500 text-sm">{errors.nTele.message}</p>}
         </div>
 
         <div className="mb-4">
@@ -60,14 +101,27 @@ const SignUp = () => {
           <input
             type="password"
             className="w-full p-3 border border-gray-300 rounded-lg"
-            {...register("confirmPassword", { 
-              validate: value => value === password || "Passwords do not match"
+            {...register("confirmPassword", {
+              validate: value => value === watch("password") || "Passwords do not match"
             })}
           />
           {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
         </div>
 
-        <button type="submit" className="w-full py-2 bg-[#0977BE] text-white rounded-lg">Sign Up</button>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Role</label>
+          <select
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            {...register("role", { required: "Role is required" })}
+          >
+            <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+            <option value="ROLE_USER">ROLE_USER</option>
+          </select>
+          {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
+        </div>
+
+        <button type="submit" className="w-full py-2 mb-4 bg-[#0977BE] text-white rounded-lg">Sign Up</button>
+       <a href='/login' className='mt-5 text-[#0977BE]' >Sign in now </a>
       </form>
     </div>
   );

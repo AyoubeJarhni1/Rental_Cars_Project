@@ -25,7 +25,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class WebSecurityConfig {
 
     private static final String[] WHITE_LIST_URL =
-            {"/api/auth/**","/voitures/**"};
+            {"/api/auth/**","/voitures/**","/voitures/disponiblesDate"};
     @Value("#{'${rentalcars.allowed-origins}'.split(',')}")
     private List<String> allowedOrigins;
     @Value("#{'${rentalcars.allowed-headers}'.split(',')}")

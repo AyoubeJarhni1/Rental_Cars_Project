@@ -2,7 +2,7 @@ import React from "react";
 
 function RentWay() {
   return (
-    <section className="ride py-16 px-5 bg-[#EDEEF6]" id="ride">
+    <section className="ride py-16 px-5 bg-[#F9F9F9]" id="ride">
       <div className="heading text-center mb-12">
         <span className="text-[#0977BE] text-lg font-semibold">How it's Work</span>
         <h1 className="text-3xl font-bold text-[#0977BE] mt-2">Rent With 3 Easy Steps</h1>

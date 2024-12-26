@@ -45,7 +45,7 @@ function CarCarousel() {
   return (
     
       
-    <div id="home-carousel" className=" home relative w-full mb-3  max-w-8xl mt-24 pt-8 mx-auto bg-[#EDEEF6] rounded-lg shadow-lg overflow-hidden">
+    <div id="home-carousel" className=" home relative w-full mb-3  max-w-8xl mt-2 pt-8 mx-auto bg-[#F9F9F9] rounded-lg shadow-lg overflow-hidden">
     <h2 className="  text-4xl font-bold text-[#0977BE] pb-6 py-3 "> Our cars </h2>
       <div className="flex items-center justify-between">
         <button

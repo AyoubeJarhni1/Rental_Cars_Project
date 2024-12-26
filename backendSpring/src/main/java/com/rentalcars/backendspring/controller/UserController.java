@@ -37,16 +37,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/update/{email}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<User> updateUser1(@PathVariable String email, @RequestBody Map<String, Object> updates) {
-        try {
-            User user = userService.updateUser(email, updates);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+
 
     @PutMapping("client/update/{email}")
     @PreAuthorize("isAuthenticated()")
@@ -61,6 +52,19 @@ public class UserController {
         }
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        try {
+            String message = userService.updateUserById(id, updates);
+            return ResponseEntity.ok(message);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // 404 Not Found avec le message d'erreur
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur interne est survenue."); // 500 Internal Server Error pour les erreurs non gérées
+        }
+    }
+
+
 
     @GetMapping("/user/profile")
     public ResponseEntity<UserResponseDto> getProfile() {
@@ -69,6 +73,21 @@ public class UserController {
 
         UserResponseDto user = userService.findUserByEmail(username);
         return ResponseEntity.ok(user);
+    }
+
+
+    @PutMapping("/update/password/{email}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> updatePasswordByEmail(
+            @PathVariable String email,
+            @RequestBody Map<String, Object> updates) {
+        try {
+
+            String message = userService.updatePasswordByEmail(email, updates);
+            return ResponseEntity.ok(message);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 }

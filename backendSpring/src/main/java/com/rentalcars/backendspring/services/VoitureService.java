@@ -3,13 +3,20 @@ package com.rentalcars.backendspring.services;
 
 import com.rentalcars.backendspring.models.Reservation;
 import com.rentalcars.backendspring.models.Voiture;
+import com.rentalcars.backendspring.payload.request.ReservationRequest;
+import com.rentalcars.backendspring.payload.response.VoitureDTO;
 import com.rentalcars.backendspring.repository.ReservRepository;
 import com.rentalcars.backendspring.repository.VoitureRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +27,9 @@ public class VoitureService {
     @Autowired
     private ReservRepository reservRepository;
 
+    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(VoitureService.class);
+
     public VoitureService(VoitureRepository voitureRepository) {
         this.voitureRepository = voitureRepository;
     }
@@ -27,8 +37,27 @@ public class VoitureService {
     public List<Voiture> getAllVoitures() {
         return voitureRepository.findAll();
     }
-    public List<Voiture> findAllVoituresDisponible() {
-        return voitureRepository.findByStatus(Voiture.Status.DISPONIBLE);
+
+    public List<VoitureDTO> findAllVoituresDisponible() {
+        List<Voiture> voitures = voitureRepository.findByStatus(Voiture.Status.valueOf("DISPONIBLE"));
+        List<VoitureDTO> voitureDTOs = new ArrayList<>();
+
+        for (Voiture voiture : voitures) {
+            VoitureDTO voitureDTO = new VoitureDTO();
+            voitureDTO.setId(voiture.getId());
+            voitureDTO.setType(voiture.getType());
+            voitureDTO.setMarque(voiture.getMarque());
+            voitureDTO.setModele(voiture.getModele());
+            voitureDTO.setPrix(voiture.getPrix());
+            voitureDTO.setPathimage(voiture.getPathimage());
+            voitureDTO.setStatus(voiture.getStatus().name());
+            voitureDTO.setMatricule(voiture.getMatricule());
+
+
+            voitureDTOs.add(voitureDTO);
+        }
+
+        return voitureDTOs;
     }
 
     public List<Voiture> findAvailableCars(LocalDate startDate, LocalDate endDate) {
@@ -40,12 +69,75 @@ public class VoitureService {
                 .collect(Collectors.toList());
     }
 
-    private boolean isCarAvailable(Voiture car, LocalDate startDate, LocalDate endDate) {
-        // Vérifier si la voiture est réservée pendant la période demandée
-        List<Reservation> reservations = reservRepository.findReservationsForCar(car.getId(), startDate, endDate);
+    public List<VoitureDTO> findAvailableCarsDate(Date startDate, Date endDate) {
 
-        // Si aucune réservation n'est trouvée pour cette période, la voiture est disponible
+        List<Voiture> allCars = voitureRepository.findAvailableVoitures(startDate,endDate);
+        List<VoitureDTO> voitureDTOs = new ArrayList<>();
+        for (Voiture voiture : allCars) {
+            VoitureDTO voitureDTO = new VoitureDTO();
+            voitureDTO.setId(voiture.getId());
+            voitureDTO.setType(voiture.getType());
+            voitureDTO.setMarque(voiture.getMarque());
+            voitureDTO.setModele(voiture.getModele());
+            voitureDTO.setPrix(voiture.getPrix());
+            voitureDTO.setPathimage(voiture.getPathimage());
+            voitureDTO.setStatus(voiture.getStatus().name());
+            voitureDTO.setMatricule(voiture.getMatricule());
+            voitureDTOs.add(voitureDTO);
+        }
+return voitureDTOs;
+    }
+
+
+    private boolean isCarAvailable(Voiture car, LocalDate startDate, LocalDate endDate) {
+        List<Reservation> reservations = reservRepository.findReservationsForCar(car.getId(), startDate, endDate);
         return reservations.isEmpty();
     }
+
+    public List<Voiture> findAvailableCarsByDate(LocalDate startDate) {
+        return voitureRepository.findAvailableCarsByDate(startDate);
+    }
+
+
+    public List<VoitureDTO> getAvailableVoitures(Date dateDebut, Date dateFin) {
+        List<Voiture> voitures=voitureRepository.findAvailableVoitures(dateDebut,dateFin);
+        List<VoitureDTO> voitureDTOs=new ArrayList<>();
+        for (Voiture voiture : voitures) {
+            VoitureDTO voitureDTO = new VoitureDTO();
+            voitureDTO.setId(voiture.getId());
+            voitureDTO.setType(voiture.getType());
+            voitureDTO.setMarque(voiture.getMarque());
+            voitureDTO.setModele(voiture.getModele());
+            voitureDTO.setPrix(voiture.getPrix());
+            voitureDTO.setPathimage(voiture.getPathimage());
+            voitureDTO.setStatus(voiture.getStatus().name());
+            voitureDTO.setMatricule(voiture.getMatricule());
+            voitureDTOs.add(voitureDTO);
+        }
+        return voitureDTOs;
+    }
+
+
+    public Voiture saveCar(Voiture voiture) {
+        return voitureRepository.save(voiture);
+    }
+
+    public void deleteCar(Long id) {
+        voitureRepository.deleteById(id);
+    }
+
+    public Voiture updateCar(Long id, Voiture voiture) {
+        Voiture existingCar = voitureRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Car not found"));
+        existingCar.setMarque(voiture.getMarque());
+        existingCar.setModele(voiture.getModele());
+        existingCar.setPathimage(voiture.getPathimage());
+        existingCar.setPrix(voiture.getPrix());
+        existingCar.setStatus(voiture.getStatus());
+        existingCar.setType(voiture.getType());
+        return voitureRepository.save(existingCar);
+    }
+
+
 
 }

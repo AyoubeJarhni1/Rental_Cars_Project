@@ -14,7 +14,7 @@ public class Voiture {
     private String marque;
     private int modele;
     private int prix;
-
+   private  String matricule ;
 
     private String pathimage;
 
@@ -30,12 +30,23 @@ public class Voiture {
     @OneToMany(mappedBy = "voiture")
     private Set<Reservation> reservationset;
 
+    public Set<Reservation> getReservationset() {
+        return reservationset;
+    }
+
     public enum Status {
         DISPONIBLE,
         RESERVEE,
         EN_REPARATION
     }
 
+    public void setAdmin(User admin){
+        this.admin=admin;
+    }
+
+    public User getAdmin(){
+        return admin;
+    }
 
     public String getPathimage() {
         return pathimage;
@@ -45,9 +56,6 @@ public class Voiture {
         this.pathimage = pathimage;
     }
 
-    public Status getStatus() {
-        return status;
-    }
 
     public void setStatus(Status status) {
         this.status = status;
@@ -84,5 +92,16 @@ public class Voiture {
         this.prix = prix;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public String getMatricule(){
+        return matricule;
+    }
+
+    public void setMatricule(String matricule) {
+        this.matricule=matricule;
+    }
 }
 

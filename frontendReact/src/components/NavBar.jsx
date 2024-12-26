@@ -5,23 +5,32 @@ const NavBar = () => {
     <nav className="bg-white shadow-lg mb-8  h-21 fixed top-0 left-0 w-full z-50">
       <div className="container flex items-center justify-between py-3 px-6">
         
-        {/* Logo Aligné à gauche */}
-        <div className="flex items-center space-x-6">
-          <img
-            src="/logo.jpg"
-            alt="Logo"
-            className="h-16 w-20"
-          />
-          <a href="#" className="text-3xl font-semibold" style={{ color: "#0977BE" }}>
-            CasaRide
-          </a>
-        </div>
+      
+      <div className="flex items-center space-x-0">
+  <img
+    src="/logo1.jpg"
+    alt="Logo"
+    className="h-16 w-20 rounded-full"
+  />
+  <a
+    href="#"
+    className="text-2xl font-semibold "
+    style={{
+      color: "#1C78AA",
+      fontFamily: "'Arial', sans-serif", 
+      textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)", 
+      letterSpacing: "0.5px"
+    }}
+  >
+    RideFlex
+  </a>
+</div>
 
-        {/* Liens de navigation centré */}
+
         <ul className="flex space-x-10 flex-grow justify-center">
           <li>
             <a
-              href="#home-carousel"
+              href="#home"
               className="text-gray-700 font-semibold hover:text-[#637BE4] transition duration-300"
             >
               Home
@@ -33,6 +42,14 @@ const NavBar = () => {
               className="text-gray-700 font-semibold hover:text-[#637BE4] transition duration-300"
             >
               Ride
+            </a>
+          </li>
+          <li>
+            <a
+              href="#home-carousel"
+              className="text-gray-700 font-semibold hover:text-[#637BE4] transition duration-300"
+            >
+             Our Cars
             </a>
           </li>
           <li>

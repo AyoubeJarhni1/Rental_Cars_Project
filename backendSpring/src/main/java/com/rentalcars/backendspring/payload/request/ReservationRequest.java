@@ -1,6 +1,10 @@
 package com.rentalcars.backendspring.payload.request;
 
 
+import com.rentalcars.backendspring.payload.response.UserResponse;
+import com.rentalcars.backendspring.payload.response.VoitureResponse;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 public class ReservationRequest {
@@ -29,17 +33,21 @@ public class ReservationRequest {
     public Date getDateDb() {
         return dateDb;
     }
-
     public void setDateDb(Date dateDb) {
         this.dateDb = dateDb;
     }
-
     public Date getDateFin() {
         return dateFin;
     }
-
     public void setDateFin(Date dateFin) {
         this.dateFin = dateFin;
     }
+
+
+
+    public void setId(Long id) {
+        this.userId=id ;
+    }
+
 }
 

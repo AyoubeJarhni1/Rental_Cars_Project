@@ -1,6 +1,7 @@
 package com.rentalcars.backendspring.repository;
 
 import com.rentalcars.backendspring.models.Reservation;
+import com.rentalcars.backendspring.payload.request.ReservationRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ReservRepository extends JpaRepository<Reservation,Long> {
@@ -25,4 +25,14 @@ public interface ReservRepository extends JpaRepository<Reservation,Long> {
     boolean existsByUserIdAndDateDbBetweenOrDateFinBetween(Long userId, Date dateDb, Date dateFin, Date dateDb1, Date dateFin1);
 
     boolean existsByVoitureIdAndDateDbBetweenOrDateFinBetween(Long voitureId, Date dateDb, Date dateFin, Date dateDb1, Date dateFin1);
+
+
+    List<Reservation> findByUserId(Long userId);
+
+    ReservationRequest save(ReservationRequest reservation);
+
+    void deleteById(Long id);
+
+
 }
+

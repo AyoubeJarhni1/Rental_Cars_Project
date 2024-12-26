@@ -5,12 +5,14 @@ import ReservationForm from "./ReservationForm";
 const Reservation = () => {
   const [cars, setCars] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCriteria, setSearchCriteria] = useState("type");
+  const [searchCriteria, setSearchCriteria] = useState("prix");
   const [showForm, setShowForm] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
-
-  
-  const [startDate, setStartDate] = useState(""); // Date de début de réservation
+  const [startDate, setStartDate] = useState(""); 
+  const [endDate, setEndDate] = useState("");   
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedMarque, setSelectedMarque] = useState("");
+  const [selectedModele, setSelectedModele] = useState("");
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -18,8 +20,6 @@ const Reservation = () => {
         const response = await fetch("http://localhost:8080/voitures/disponibles");
         const data = await response.json();
         setCars(data);
-        const user = localStorage.getItem("userInfo");
-        localStorage.setItem("user", user);
       } catch (error) {
         console.error("Error fetching car data:", error);
       }
@@ -28,35 +28,67 @@ const Reservation = () => {
     fetchCars();
   }, []);
 
+  const handleSubmit = async () => {
+    if (!startDate || !endDate) {
+      alert("Veuillez choisir les dates de début et de fin.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/voitures/disponiblesDate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          startDate,
+          endDate,
+        }),
+      });
+
+      const data = await response.json();
+      setCars(data);
+    } catch (error) {
+      console.error("Error fetching filtered car data:", error);
+    }
+  };
+
   const filteredCars = cars.filter((car) => {
     const modelString = String(car.modele).toLowerCase();
+    const typeString = String(car.type).toLowerCase();
+    const marqueString = String(car.marque).toLowerCase();
 
-    if (searchCriteria === "price") {
-      return car.prix.toString().includes(searchTerm);
-    }
-    if (searchCriteria === "model") {
-      return modelString.includes(searchTerm.toLowerCase());
-    }
-    if (searchCriteria === "type") {
-      return car.type && car.type.toLowerCase().includes(searchTerm.toLowerCase());
-    }
-    if (searchCriteria === "marque") {
-      return car.marque && car.marque.toLowerCase().includes(searchTerm.toLowerCase());
+    let isMatch = true;
+
+    // Filtrage par type
+    if (selectedType && selectedType !== "" && !typeString.includes(selectedType.toLowerCase())) {
+      isMatch = false;
     }
 
-    return true;
-  }).filter((car) => {
+    // Filtrage par marque
+    if (selectedMarque && selectedMarque !== "" && !marqueString.includes(selectedMarque.toLowerCase())) {
+      isMatch = false;
+    }
 
-    if (!startDate) return true; // Si aucune date n'est sélectionnée, retournez toutes les voitures
-    const carAvailableFromDate = new Date(car.startDate); // Assurez-vous que car.startDate existe et est une date valide
-    const filterStartDate = new Date(startDate);
-    return carAvailableFromDate <= filterStartDate;
+    // Filtrage par modèle
+    if (selectedModele && selectedModele !== "" && !modelString.includes(selectedModele.toLowerCase())) {
+      isMatch = false;
+    }
+
+    // Filtrage par prix
+    if (searchCriteria === "prix" && searchTerm && !car.prix.toString().includes(searchTerm)) {
+      isMatch = false;
+    }
+
+    return isMatch;
   });
 
   const handleReservation = (car) => {
     setSelectedCar(car);
+    localStorage.setItem("priceCar",car.prix);
+    const savedPrice = localStorage.getItem("priceCar");
+    console.log("price",savedPrice);
     setShowForm(true);
-    console.log("Selected Car ID:", car.id);
   };
 
   const closeForm = () => {
@@ -65,50 +97,94 @@ const Reservation = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <div className="w-1/5 h-screen bg-white shadow-md p-0 m-0">
+    <div className=" flex min-h-screen bg-gray-50">
+      <div className="   w-1/5 h-auto bg-white shadow-md p-0 m-0">
         <Sidebar />
       </div>
 
-      <div className="w-4/5 container mx-auto ml-2 mr-6 p-2">
-        <h1 className="text-2xl font-semibold text-center mb-6">Choose your preferred Car</h1>
+      <div className="w-4/5 container mx-auto ml-2 mr-6 p-2 bg-gradient-to-br from-primary5  to-primary5">
+      <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mx-auto" />
+        <h1 className="text-2xl font-semibold text-[#2D90C4] mt-8 text-center mb-6">Réserver votre voiture préférée</h1>
 
-        {/* Search filters */}
-        <div className="flex items-center gap-4 mb-6">
-          <select
-            className="border rounded-lg border-black p-2"
-            value={searchCriteria}
-            onChange={(e) => setSearchCriteria(e.target.value)}
-          >
-            <option value="marque">Marque</option>
-            <option value="type">Type</option>
-            <option value="model">Modèle</option>
-            <option value="price">Prix</option>
-          </select>
-          <input
-            type="text"
-            className="border border-black rounded-lg p-2 flex-1"
-            placeholder={`Search by ${searchCriteria}`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <div className="flex flex-col gap-6 mb-6">
+ 
+  <div className="flex flex-wrap gap-4">
+    {/* Sélection Type */}
+    <select
+      className="border rounded-lg border-black p-2 w-full sm:w-auto"
+      value={selectedType}
+      onChange={(e) => setSelectedType(e.target.value)}
+    >
+      <option value="">Sélectionner le type</option>
+      <option value="essence">essence</option>
+      <option value="diesel">diesel</option>
+      <option value="hybride">hybride</option>
+      <option value="électrique">électrique</option>
+    </select>
 
-        {/* Date filter for start of reservation */}
-        <div className="flex items-center gap-4 mb-6">
-          <label htmlFor="startDate" className="block text-gray-700 font-medium">
-            Date de début de réservation:
-          </label>
-          <input
-            type="date"
-            id="startDate"
-            className="border border-black rounded-lg p-2"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
+    <select
+      className="border rounded-lg border-black p-2 w-full sm:w-auto"
+      value={selectedMarque}
+      onChange={(e) => setSelectedMarque(e.target.value)}
+    >
+      <option value="">Sélectionner la marque</option>
+      <option value="Toyota">Toyota</option>
+      <option value="Renault">Renault</option>
+      <option value="Mercedes">Mercedes</option>
+      <option value="Peugeot">Peugeot</option>
+    </select>
 
-        {/* Cars grid */}
+    <select
+      className="border rounded-lg border-black p-2 w-full sm:w-auto"
+      value={selectedModele}
+      onChange={(e) => setSelectedModele(e.target.value)}
+    >
+      <option value="">Sélectionner le modèle</option>
+      <option value="2020">2020</option>
+      <option value="2021">2021</option>
+      <option value="2022">2022</option>
+      <option value="2023">2023</option>
+      <option value="2024">2024</option>
+    </select>
+
+    <input
+      type="text"
+      className="border border-black rounded-lg p-2 flex-1 w-full sm:w-auto"
+      placeholder="Rechercher par prix"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  </div>
+
+ 
+  <div className="flex flex-wrap gap-4">
+
+    <input
+      type="date"
+      className="border border-black rounded-lg p-2 w-full sm:w-auto"
+      value={startDate}
+      onChange={(e) => setStartDate(e.target.value)}
+    />
+
+    
+    <input
+      type="date"
+      className="border border-black  rounded-lg p-2 w-full sm:w-auto"
+      value={endDate}
+      onChange={(e) => setEndDate(e.target.value)}
+    />
+
+    <button
+      onClick={handleSubmit}
+      type="submit"
+      className="w-full sm:w-20 h-10 border border-black py-2 bg-[#0977BE] text-white rounded-lg"
+    >
+      Search
+    </button>
+  </div>
+</div>
+
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCars.length > 0 ? (
             filteredCars.map((car) => (
@@ -130,7 +206,7 @@ const Reservation = () => {
                     onClick={() => handleReservation(car)}
                     className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
                   >
-                    Reservate
+                    Réserver
                   </button>
                 </div>
               </div>

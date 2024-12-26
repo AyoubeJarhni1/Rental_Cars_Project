@@ -1,10 +1,11 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios'; 
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
 
 const SignUp = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const navigate = useNavigate(); 
 
   const onSubmit = async (data) => {
     console.log(data); 
@@ -23,7 +24,9 @@ const SignUp = () => {
       const response = await axios.post("http://localhost:8080/api/auth/signup", requestData);
       console.log("Réponse du serveur:", response.data); 
       alert("Inscription réussie!");
-     
+      
+    
+      navigate("/login");
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error); 
       alert("Erreur lors de l'inscription.");
@@ -32,10 +35,14 @@ const SignUp = () => {
 
   return (
     <div className="max-w-xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+       <img
+        src="/logo1.jpg"
+        alt="Logo"
+        className="h-16 w-20 rounded-lg mx-auto"
+      />
       <h2 className="text-3xl font-bold text-center text-[#0977BE] mb-6">Sign Up</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-       
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Username</label>
           <input
@@ -121,7 +128,7 @@ const SignUp = () => {
         </div>
 
         <button type="submit" className="w-full py-2 mb-4 bg-[#0977BE] text-white rounded-lg">Sign Up</button>
-       <a href='/login' className='mt-5 text-[#0977BE]' >Sign in now </a>
+        <a href='/login' className='mt-5 text-[#0977BE]' >Sign in now </a>
       </form>
     </div>
   );

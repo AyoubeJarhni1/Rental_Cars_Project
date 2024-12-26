@@ -11,8 +11,9 @@ public class Contrat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "reservation_id")
+
     private Reservation reservation;
 
     private String statut;

@@ -1,5 +1,6 @@
 package com.rentalcars.backendspring.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -12,13 +13,20 @@ public class Reservation {
 
     private Date  dateDb;
     private Date dateFin;
+
     @ManyToOne
+
     @JoinColumn (name = "voiture_id")
     Voiture voiture;
 
     @ManyToOne
     @JoinColumn(name="user-id")
     User user ;
+
+
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status = ReservationStatus.EN_COURS;
 
     public void setUser(User user) {
         this.user = user;
@@ -54,7 +62,15 @@ public class Reservation {
         return this;
     }
 
-    public Object getId() {
+    public Long getId() {
         return id ;
     }
+
+ public void setStatus(ReservationStatus status) {
+        this.status = status;
+ }
+ public ReservationStatus getStatus() {
+            return status;
+ }
+
 }

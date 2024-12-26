@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  
 
   const onSubmit = async (data) => {
     try {
@@ -28,9 +29,9 @@ const Login = () => {
       alert("bienvenu");
 
       if (role === "ROLE_ADMIN") {
-        navigate("/rent");
+        navigate("/sideAdmin");
       } else if (role === "ROLE_USER") {
-        navigate("/client");
+        navigate("/accueil");
       } else {
         alert("Rôle non reconnu");
       }
@@ -41,7 +42,9 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+    <div className="max-w-xl mx-auto h-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
+      
+      <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mx-auto" />
       <h2 className="text-3xl font-bold text-center text-[#0977BE] mb-6">Login</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -68,6 +71,8 @@ const Login = () => {
         <button type="submit" className="w-full py-2 bg-[#0977BE] text-white rounded-lg">
           Connexion
         </button>
+        <br/> <br/> 
+        <h3>Do you have an account ? <a href="/signup" className="text-[#0977BE] mt-5">Create account</a></h3>
       </form>
     </div>
   );

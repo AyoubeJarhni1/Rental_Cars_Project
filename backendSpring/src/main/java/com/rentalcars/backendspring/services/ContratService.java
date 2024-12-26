@@ -70,6 +70,11 @@ public class ContratService {
         table.addCell(reservation.getUser().getAdress());
         table.addCell("Date de Naissance du Client");
         table.addCell(reservation.getUser().getDateNaiss().toString());
+        table.addCell(" Status de réservation ");
+        table.addCell(reservation.getVoiture().getStatus().toString());
+        table.addCell(" Matricule de voiture  ");
+        table.addCell(reservation.getVoiture().getMatricule().toString());
+
 
         table.addCell("Voiture");
         table.addCell(reservation.getVoiture().getMarque() + " " + reservation.getVoiture().getModele());

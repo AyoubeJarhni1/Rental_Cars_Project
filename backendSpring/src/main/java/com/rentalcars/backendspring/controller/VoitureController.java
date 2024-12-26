@@ -1,16 +1,17 @@
 package com.rentalcars.backendspring.controller;
 
 import com.rentalcars.backendspring.models.Voiture;
+import com.rentalcars.backendspring.payload.request.DateRangeRequest;
+import com.rentalcars.backendspring.payload.response.VoitureDTO;
 import com.rentalcars.backendspring.services.VoitureService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -32,20 +33,51 @@ public class VoitureController {
     }
 
     @GetMapping("/disponibles")
-    public ResponseEntity<List<Voiture>> getVoituresDisponibles() {
-        List<Voiture> voitures = voitureService.findAllVoituresDisponible();
+    public ResponseEntity<List<VoitureDTO>> getVoituresDisponibles() {
+        List<VoitureDTO> voitures = voitureService.findAllVoituresDisponible();
         if (voitures.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voitures);
     }
 
-    @GetMapping("/disponibles1")
-    public ResponseEntity<List<Voiture>> getAvailableCars(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+ @PostMapping("/availlableDate")
+    public ResponseEntity<List<VoitureDTO>> findAvailableCars(
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
 
-        List<Voiture> availableCars = voitureService.findAvailableCars(startDate, endDate);
+        List<VoitureDTO> availableCars = voitureService.findAvailableCarsDate(startDate, endDate);
         return ResponseEntity.ok(availableCars);
     }
+
+    @PostMapping("/disponiblesDate")
+    public List<VoitureDTO> getAvailableVoitures(
+            @RequestBody DateRangeRequest dateRangeRequest) {
+
+        Date dateDebut = dateRangeRequest.getDateDebut();
+        Date dateFin = dateRangeRequest.getDateFin();
+
+        return voitureService.getAvailableVoitures(dateDebut, dateFin);
+    }
+
+
+    @PostMapping("/add")
+    public ResponseEntity<Voiture> addCar(@RequestBody Voiture voiture) {
+        Voiture newCar = voitureService.saveCar(voiture);
+        return ResponseEntity.status(201).body(newCar);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Voiture> updateCar(@PathVariable Long id, @RequestBody Voiture voiture) {
+        Voiture updatedCar = voitureService.updateCar(id, voiture);
+        return ResponseEntity.ok(updatedCar);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
+        voitureService.deleteCar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

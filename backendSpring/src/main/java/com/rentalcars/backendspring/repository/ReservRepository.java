@@ -1,6 +1,9 @@
 package com.rentalcars.backendspring.repository;
 
 import com.rentalcars.backendspring.models.Reservation;
+import com.rentalcars.backendspring.models.ReservationStatus;
+import com.rentalcars.backendspring.models.User;
+import com.rentalcars.backendspring.models.Voiture;
 import com.rentalcars.backendspring.payload.request.ReservationRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +16,7 @@ import java.util.List;
 
 @Repository
 public interface ReservRepository extends JpaRepository<Reservation,Long> {
+
     @Query("SELECT r FROM Reservation r WHERE r.voiture.id = :carId AND " +
             "((r.dateDb BETWEEN :startDate AND :endDate) OR (r.dateFin BETWEEN :startDate AND :endDate))")
     List<Reservation> findReservationsForCar(@Param("carId") Long carId,
@@ -28,11 +32,13 @@ public interface ReservRepository extends JpaRepository<Reservation,Long> {
 
 
     List<Reservation> findByUserId(Long userId);
+    List<Reservation> findByUserIdAndStatus(Long userId, ReservationStatus status);
 
     ReservationRequest save(ReservationRequest reservation);
 
     void deleteById(Long id);
 
-
+    boolean existsByVoitureAndDateDbLessThanEqualAndDateFinGreaterThanEqual(Voiture voiture, Date dateFin, Date dateDb);
+    boolean existsByUserAndDateDbLessThanEqualAndDateFinGreaterThanEqual(User user, Date dateFin, Date dateDb);
 }
 

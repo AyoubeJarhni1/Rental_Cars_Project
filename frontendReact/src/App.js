@@ -24,6 +24,7 @@ import Payment from './pages/PaymentForm';
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import ProfileAdmin from './pages/profilAdmin';
 
 // Load Stripe with your public key
 const stripePromise = loadStripe('pk_test_51Qa4URJ0GcGDS8zCHtvX70c6awf1bVExnHvmKtxIY4nO6eGtdIfCRMVtpqVvcXwoQqXQEgpDYdd6dNCOxyEdzPP700cbDKuDx7');
@@ -47,9 +48,9 @@ function App() {
           <Route path="/cars" element={<CarsPage />} />
           <Route path="/password" element={<ChangePassword />} />
           <Route path="/sideAdmin" element={<SidebarA />} />
-          <Route path="/carsAdmin" element={<CarsCrud />} />
+          <Route path="/carsAdmin" element={<CarsCrud/>} />
+          <Route path="/profilAdmin" element={<ProfileAdmin/>} />
 
-          {/* Wrap the Payment route with Elements */}
           <Route 
             path="/payer" 
             element={

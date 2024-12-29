@@ -52,14 +52,7 @@ const NavBar = () => {
              Our Cars
             </a>
           </li>
-          <li>
-            <a
-              href="#services"
-              className="text-gray-700 font-semibold hover:text-[#637BE4] transition duration-300"
-            >
-              Services
-            </a>
-          </li>
+         
           <li>
             <a
               href="#about"
@@ -71,7 +64,7 @@ const NavBar = () => {
           <li>
             <a
               href="#reviews"
-              className="text-gray-700 hover:text-[#637BE4] transition duration-300"
+              className="text-gray-700 font-semibold hover:text-[#637BE4] transition duration-300"
             >
               Reviews
             </a>

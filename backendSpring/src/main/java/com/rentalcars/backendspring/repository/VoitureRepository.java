@@ -22,10 +22,10 @@ public interface VoitureRepository extends JpaRepository<Voiture, Long> {
     @Query("SELECT v FROM Voiture v WHERE v.id NOT IN (SELECT r.voiture.id FROM Reservation r WHERE r.dateDb <= :startDate AND r.dateFin >= :startDate)")
     List<Voiture> findAvailableCarsByDate(@Param("startDate") LocalDate startDate);
 
-
     @Query("SELECT v FROM Voiture v WHERE v.id NOT IN " +
             "(SELECT r.voiture.id FROM Reservation r WHERE " +
-            "(r.dateDb BETWEEN :dateDebut AND :dateFin OR r.dateFin BETWEEN :dateDebut AND :dateFin))")
+            "(r.dateDb BETWEEN :dateDebut AND :dateFin AND r.dateFin BETWEEN :dateDebut AND :dateFin) " +
+            "AND r.status = 'COMPLETE')")
     List<Voiture> findAvailableVoitures(@Param("dateDebut") Date dateDebut, @Param("dateFin") Date dateFin);
 
 

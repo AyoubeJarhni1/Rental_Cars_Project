@@ -14,6 +14,7 @@ const Sidebar = () => {
     if (confirmation) {
       
       localStorage.removeItem('token'); 
+      localStorage.removeItem('userEmail');
       
       alert("Vous êtes déconnecté");
       

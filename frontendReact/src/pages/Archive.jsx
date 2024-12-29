@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Dashboard";
 
 const ReservationArchive = () => {
-  // Function to calculate the date difference
+
   function calculateDateDifference(dateStart, dateEnd) {
     const start = new Date(dateStart);
     const end = new Date(dateEnd);
@@ -25,7 +25,6 @@ const ReservationArchive = () => {
     endDate: "",
   });
 
-  // Fetch reservations from the API
   useEffect(() => {
     const fetchReservations = async () => {
       try {
@@ -63,9 +62,9 @@ const ReservationArchive = () => {
     fetchReservations();
   }, []);
 
-  // Filter reservations based on search term and criteria
+  
   const filteredReservations = reservations.filter((reservation) => {
-    // Ensure the value is a string before calling toLowerCase
+   
     const userSearch = (reservation[searchCriteria] || "").toString().toLowerCase();
     return userSearch.includes(searchTerm.toLowerCase());
   });
@@ -82,7 +81,7 @@ const ReservationArchive = () => {
           Archive de vos réservations
         </h1>
 
-        {/* Search bar */}
+        
         <div className="flex flex-wrap gap-4">
           <select
             className="border rounded-lg p-2"
@@ -113,27 +112,10 @@ const ReservationArchive = () => {
               ))}
           </select>
 
-          <input
-            type="date"
-            className="border rounded-lg p-2"
-            placeholder="Date de début"
-            value={selectedDateRange.startDate}
-            onChange={(e) =>
-              setSelectedDateRange((prev) => ({ ...prev, startDate: e.target.value }))
-            }
-          />
-          <input
-            type="date"
-            className="border rounded-lg p-2"
-            placeholder="Date de fin"
-            value={selectedDateRange.endDate}
-            onChange={(e) =>
-              setSelectedDateRange((prev) => ({ ...prev, endDate: e.target.value }))
-            }
-          />
+          
         </div>
 
-        {/* Reservations list */}
+       
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredReservations.length > 0 ? (
             filteredReservations.map((reservation) => (

@@ -145,5 +145,10 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    @PutMapping("/status/{reservationId}")
+    public String updateReservationStatus(@PathVariable long reservationId) {
+        reservationService.updateReservationStatus(reservationId);
+        return "Updated successfully";
+    }
 
 }

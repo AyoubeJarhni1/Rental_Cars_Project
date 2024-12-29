@@ -72,11 +72,24 @@ public class VoitureController {
         Voiture updatedCar = voitureService.updateCar(id, voiture);
         return ResponseEntity.ok(updatedCar);
     }
+    @PutMapping("/update/{id}")
+    public String updateVoiture(@PathVariable Long id, @RequestBody Voiture voiture){
+        return voitureService.updateCar1(id, voiture);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
         voitureService.deleteCar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/allCars")
+    public ResponseEntity<List<VoitureDTO>> getAllVoituresAdmin() {
+        List<VoitureDTO> voitures = voitureService.findAllVoitures();
+        if (voitures.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voitures);
     }
 
 

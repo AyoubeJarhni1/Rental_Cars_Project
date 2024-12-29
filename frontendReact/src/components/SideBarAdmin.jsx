@@ -10,21 +10,22 @@ const SidebarA = () => {
     
     if (confirmation) {
       localStorage.removeItem('token'); 
+      localStorage.removeItem('userInfo');
       alert("Vous êtes déconnecté");
       navigate("/"); 
     }
   };
 
   return (
-    <div className="h-screen w-60 bg-blue-500 text-white flex flex-col">
+    <div className="h-screen w-60 bg-blue-500 text-white flex flex-col fixed">
       <img src="/logo1.jpg" alt="Logo" className="h-16 mt-5 w-20 rounded-lg mx-auto" />
       <h1 className="text-2xl font-bold p-4">Admin Space</h1>
       <nav className="flex flex-col gap-4 p-4">
-        <a href="/" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
+        <a href="/Acc" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
           <HomeIcon className="h-6 w-6" />
           Accueil
         </a>
-        <a href="/carscrud" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
+        <a href="/carsAdmin" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
           <CalendarIcon className="h-6 w-6" />
           Cars
         </a>
@@ -32,7 +33,7 @@ const SidebarA = () => {
           <CalendarIcon className="h-6 w-6" />
           Dashboard
         </a>
-        <a href="/profil" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
+        <a href="/profilAdmin" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
           <UserIcon className="h-6 w-6" />
           Profil
         </a>

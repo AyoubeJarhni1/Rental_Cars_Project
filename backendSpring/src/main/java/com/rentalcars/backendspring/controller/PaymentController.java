@@ -15,7 +15,7 @@ public class PaymentController {
     @Autowired
     private StripeService stripeService;
 
-    // Endpoint to create PaymentIntent
+
     @PostMapping("/create-payment-intent")
     public PayementResponse createPaymentIntent(@RequestBody PayementRequest paymentRequest) {
         try {

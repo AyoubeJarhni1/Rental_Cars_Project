@@ -20,6 +20,8 @@ import CarsAdmin from './pages/CarsAdmin';
 import SidebarA from './components/SideBarAdmin';
 import CarsCrud from './pages/carsCrud';
 import Payment from './pages/PaymentForm';
+import DashboardAdmin from './pages/DashboardAdmin';
+import Reports from './components/Reports';
 
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
@@ -44,10 +46,12 @@ function App() {
           <Route path="/reservation-success" element={<ReservationSuccess />} />
           <Route path="/archive" element={<ReservationArchive />} />
           <Route path="/accueil" element={<Dashboard />} />
+          <Route path="/Dashboard_admin" element={<DashboardAdmin />} />
           <Route path="/cars" element={<CarsPage />} />
           <Route path="/password" element={<ChangePassword />} />
           <Route path="/sideAdmin" element={<SidebarA />} />
           <Route path="/carsAdmin" element={<CarsCrud />} />
+          <Route path="/reports" element={<Reports />} />
 
           {/* Wrap the Payment route with Elements */}
           <Route 

@@ -23,6 +23,11 @@ public class ReservationController {
     @Autowired
     ReservationService reservationService;
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> countReservations() {
+        return ResponseEntity.ok(reservationService.countReservations());
+    }
+
    /* @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Reservation> saveReservation(@RequestBody ReservationRequest request) {

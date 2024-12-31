@@ -1,6 +1,6 @@
 import React from "react";
 import { HomeIcon, CarIcon, CalendarIcon, UserIcon, LogoutIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom"; 
+import { Navigate, useNavigate } from "react-router-dom";
 
 const SidebarA = () => {
   const navigate = useNavigate(); 
@@ -24,7 +24,7 @@ const SidebarA = () => {
           <HomeIcon className="h-6 w-6" />
           Accueil
         </a>
-        <a href="/carscrud" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
+        <a href="../pages/carsCrud" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
           <CalendarIcon className="h-6 w-6" />
           Cars
         </a>

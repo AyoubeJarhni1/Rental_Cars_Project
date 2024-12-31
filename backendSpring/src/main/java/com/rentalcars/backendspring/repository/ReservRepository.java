@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +17,12 @@ public interface ReservRepository extends JpaRepository<Reservation,Long> {
     @Query("SELECT r FROM Reservation r WHERE r.voiture.id = :carId AND " +
             "((r.dateDb BETWEEN :startDate AND :endDate) OR (r.dateFin BETWEEN :startDate AND :endDate))")
     List<Reservation> findReservationsForCar(@Param("carId") Long carId,
-                                             @Param("startDate") LocalDate startDate,
-                                             @Param("endDate") LocalDate endDate);
+                                             @Param("startDate") Date startDate,
+                                             @Param("endDate") Date endDate);
 
+    @Query("SELECT r FROM Reservation r WHERE (r.dateDb BETWEEN :startDate AND :endDate) OR (r.dateFin BETWEEN :startDate AND :endDate)")
+    List<Reservation> findBookingsBetweenDates(@Param("startDate") LocalDateTime startDate,
+                                               @Param("endDate") LocalDateTime endDate);
     @Override
     Reservation save(Reservation reservation);
 

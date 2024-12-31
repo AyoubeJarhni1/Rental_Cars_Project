@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +61,7 @@ public class VoitureService {
         return voitureDTOs;
     }
 
-    public List<Voiture> findAvailableCars(LocalDate startDate, LocalDate endDate) {
+    public List<Voiture> findAvailableCars(Date startDate, Date endDate) {
 
         List<Voiture> allCars = voitureRepository.findAll();
 
@@ -89,7 +90,7 @@ return voitureDTOs;
     }
 
 
-    private boolean isCarAvailable(Voiture car, LocalDate startDate, LocalDate endDate) {
+    private boolean isCarAvailable(Voiture car, Date startDate, Date endDate) {
         List<Reservation> reservations = reservRepository.findReservationsForCar(car.getId(), startDate, endDate);
         return reservations.isEmpty();
     }

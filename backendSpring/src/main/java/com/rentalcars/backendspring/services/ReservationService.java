@@ -69,6 +69,10 @@ public class ReservationService {
         return reservation;
     }
 
+    public Long countReservations() {
+        return reservRepository.count();
+    }
+
     public List<Reservation> findByUserId(Long userId) {
         return reservRepository.findByUserId(userId);
     }

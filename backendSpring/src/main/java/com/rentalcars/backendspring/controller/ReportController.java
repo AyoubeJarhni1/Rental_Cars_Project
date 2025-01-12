@@ -21,6 +21,6 @@ public class ReportController {
         } else if ("weekly".equalsIgnoreCase(period)) {
             return reportService.getWeeklyReport();
         }
-        return null; // Handle invalid request or throw an exception
+        return null;
     }
 }

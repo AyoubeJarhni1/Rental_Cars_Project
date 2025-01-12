@@ -75,6 +75,7 @@ const ChangePassword = () => {
   return (
     <div className="min-h-screen bg-blue-50 flex justify-center items-center">
       <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-6">
+      <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mx-auto mb-5" />
         <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
           Changer le Mot de Passe
         </h1>

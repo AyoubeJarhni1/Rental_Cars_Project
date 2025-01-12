@@ -25,6 +25,7 @@ public class Voiture {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+
     private User admin;
 
     @OneToMany(mappedBy = "voiture")

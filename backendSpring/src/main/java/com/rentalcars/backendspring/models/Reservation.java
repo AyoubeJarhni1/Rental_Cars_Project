@@ -65,9 +65,6 @@ public class Reservation {
     public Long getId() {
         return id ;
     }
-    public double getPrice() {
-        return voiture.getPrix();
-    }
 
  public void setStatus(ReservationStatus status) {
         this.status = status;

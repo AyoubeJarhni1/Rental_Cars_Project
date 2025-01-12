@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -214,7 +213,5 @@ public class UserService {
         return "Mot de passe mis à jour avec succès.";
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+
 }

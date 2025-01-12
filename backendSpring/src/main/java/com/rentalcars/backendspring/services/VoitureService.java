@@ -12,12 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +59,7 @@ public class VoitureService {
         return voitureDTOs;
     }
 
-    public List<Voiture> findAvailableCars(Date startDate, Date endDate) {
+    public List<Voiture> findAvailableCars(LocalDate startDate, LocalDate endDate) {
 
         List<Voiture> allCars = voitureRepository.findAll();
 
@@ -90,7 +88,7 @@ return voitureDTOs;
     }
 
 
-    private boolean isCarAvailable(Voiture car, Date startDate, Date endDate) {
+    private boolean isCarAvailable(Voiture car, LocalDate startDate, LocalDate endDate) {
         List<Reservation> reservations = reservRepository.findReservationsForCar(car.getId(), startDate, endDate);
         return reservations.isEmpty();
     }
@@ -124,6 +122,30 @@ return voitureDTOs;
     }
 
     public void deleteCar(Long id) {
+        Optional<Voiture> voitureOptional=voitureRepository.findById(id);
+        if (voitureOptional.isPresent()) {
+            Voiture voiture = voitureOptional.get();
+
+            if (voiture.getStatus() == Voiture.Status.RESERVEE) {
+                throw new IllegalStateException("Cannot delete a car with status RESERVEE");
+            }
+            if (voiture.getReservationset() != null) {
+                boolean hasActiveReservations = voiture.getReservationset().stream()
+                        .anyMatch(reservation -> {
+                            Instant reservationStartDate = reservation.getDateDb().toInstant();
+                            Instant currentDate = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant();
+                            return reservationStartDate.isAfter(currentDate);
+                        });
+
+                if (hasActiveReservations) {
+                    throw new IllegalStateException("Cannot delete a car that has future reservations");
+                }
+            }
+            voitureRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Car with id " + id + " does not exist");
+        }
+
         voitureRepository.deleteById(id);
     }
 
@@ -137,6 +159,41 @@ return voitureDTOs;
         existingCar.setStatus(voiture.getStatus());
         existingCar.setType(voiture.getType());
         return voitureRepository.save(existingCar);
+    }
+
+    public String updateCar1(Long id, Voiture voiture) {
+        Voiture existingCar = voitureRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Car not found"));
+        existingCar.setMarque(voiture.getMarque());
+        existingCar.setModele(voiture.getModele());
+        existingCar.setPathimage(voiture.getPathimage());
+        existingCar.setPrix(voiture.getPrix());
+        existingCar.setStatus(voiture.getStatus());
+        existingCar.setType(voiture.getType());
+        voitureRepository.save(existingCar);
+        return ("voiture updated successfully");
+    }
+
+    public List<VoitureDTO> findAllVoitures() {
+        List<Voiture> voitures = voitureRepository.findAll();
+        List<VoitureDTO> voitureDTOs = new ArrayList<>();
+
+        for (Voiture voiture : voitures) {
+            VoitureDTO voitureDTO = new VoitureDTO();
+            voitureDTO.setId(voiture.getId());
+            voitureDTO.setType(voiture.getType());
+            voitureDTO.setMarque(voiture.getMarque());
+            voitureDTO.setModele(voiture.getModele());
+            voitureDTO.setPrix(voiture.getPrix());
+            voitureDTO.setPathimage(voiture.getPathimage());
+            voitureDTO.setStatus(voiture.getStatus().name());
+            voitureDTO.setMatricule(voiture.getMatricule());
+
+
+            voitureDTOs.add(voitureDTO);
+        }
+
+        return voitureDTOs;
     }
 
 

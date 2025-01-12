@@ -1,39 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Sidebar from '../components/DashboardAdmin'; // Import Sidebar
+import Sidebar from '../components/SideBarAdmin';
 import '../Reports.css';
 
 const Reports = () => {
     const [reportData, setReportData] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [noReservations, setNoReservations] = useState(false); // State to track if no reservations exist
-
-    // Function to check if there are any reservations
-    const checkReservations = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/reservation/count');
-            return response.data.count > 0;
-        } catch (error) {
-            console.error("Error checking reservations:", error);
-            return false;
-        }
-    };
 
     const fetchReport = async (period) => {
         setLoading(true);
-        const reservationsExist = await checkReservations();
-
-        if (!reservationsExist) {
-            setNoReservations(true); // Set noReservations to true if no reservations are found
-            setReportData(null); // Clear previous report data
-            setLoading(false);
-            return; // Exit the function early
-        }
-
-        setNoReservations(false); // Reset noReservations to false if reservations exist
-
+        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
         try {
-            const response = await axios.get(`http://localhost:8080/reports?period=${period}`);
+            const response = await axios.get(`http://localhost:8080/reports?period=${period}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                },
+            });
             setReportData(response.data);
         } catch (error) {
             console.error("Error fetching report:", error);
@@ -54,9 +36,7 @@ const Reports = () => {
 
                 {loading && <p>Loading report...</p>}
 
-                {noReservations && <p>No reservations found in the database.</p>} {/* Show message if no reservations */}
-
-                {reportData && !noReservations && (
+                {reportData && (
                     <div className="report-details">
                         <h2>Report</h2>
                         <p>Total Bookings: {reportData.totalBookings}</p>

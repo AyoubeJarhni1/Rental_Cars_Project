@@ -5,14 +5,13 @@ import ReservationForm from "./ReservationForm";
 const Reservation = () => {
   const [cars, setCars] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchCriteria, setSearchCriteria] = useState("prix");
-  const [showForm, setShowForm] = useState(false);
-  const [selectedCar, setSelectedCar] = useState(null);
-  const [startDate, setStartDate] = useState(""); 
-  const [endDate, setEndDate] = useState("");   
   const [selectedType, setSelectedType] = useState("");
   const [selectedMarque, setSelectedMarque] = useState("");
   const [selectedModele, setSelectedModele] = useState("");
+  const [startDate, setStartDate] = useState(""); 
+  const [endDate, setEndDate] = useState("");   
+  const [showForm, setShowForm] = useState(false);
+  const [selectedCar, setSelectedCar] = useState(null);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -40,10 +39,7 @@ const Reservation = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          startDate,
-          endDate,
-        }),
+        body: JSON.stringify({ startDate, endDate }),
       });
 
       const data = await response.json();
@@ -53,41 +49,23 @@ const Reservation = () => {
     }
   };
 
+  const uniqueValues = (key) => [...new Set(cars.map((car) => car[key]))];
+
+  const marques = uniqueValues("marque");
+  const types = uniqueValues("type");
+  const modeles = uniqueValues("modele");
+
   const filteredCars = cars.filter((car) => {
-    const modelString = String(car.modele).toLowerCase();
-    const typeString = String(car.type).toLowerCase();
-    const marqueString = String(car.marque).toLowerCase();
+    const isTypeMatch = selectedType === "" || car.type.toLowerCase().includes(selectedType.toLowerCase());
+    const isMarqueMatch = selectedMarque === "" || car.marque.toLowerCase().includes(selectedMarque.toLowerCase());
+    const isModeleMatch = selectedModele === "" || car.modele.toString().toLowerCase().includes(selectedModele.toLowerCase());
+    const isPriceMatch = searchTerm === "" || car.prix.toString().includes(searchTerm);
 
-    let isMatch = true;
-
-    // Filtrage par type
-    if (selectedType && selectedType !== "" && !typeString.includes(selectedType.toLowerCase())) {
-      isMatch = false;
-    }
-
-    // Filtrage par marque
-    if (selectedMarque && selectedMarque !== "" && !marqueString.includes(selectedMarque.toLowerCase())) {
-      isMatch = false;
-    }
-
-    // Filtrage par modèle
-    if (selectedModele && selectedModele !== "" && !modelString.includes(selectedModele.toLowerCase())) {
-      isMatch = false;
-    }
-
-    // Filtrage par prix
-    if (searchCriteria === "prix" && searchTerm && !car.prix.toString().includes(searchTerm)) {
-      isMatch = false;
-    }
-
-    return isMatch;
+    return isTypeMatch && isMarqueMatch && isModeleMatch && isPriceMatch;
   });
 
   const handleReservation = (car) => {
     setSelectedCar(car);
-    localStorage.setItem("priceCar",car.prix);
-    const savedPrice = localStorage.getItem("priceCar");
-    console.log("price",savedPrice);
     setShowForm(true);
   };
 
@@ -97,95 +75,91 @@ const Reservation = () => {
   };
 
   return (
-    <div className=" flex min-h-screen bg-gray-50">
-      <div className="   w-1/5 h-auto bg-white shadow-md p-0 m-0">
+    <div className="flex min-h-screen bg-gray-50">
+      <div className="w-1/5 h-auto bg-white shadow-md p-0 m-0">
         <Sidebar />
       </div>
 
-      <div className="w-4/5 container mx-auto ml-2 mr-6 p-2 bg-gradient-to-br from-primary5  to-primary5">
-      <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mx-auto" />
-        <h1 className="text-2xl font-semibold text-[#2D90C4] mt-8 text-center mb-6">Réserver votre voiture préférée</h1>
+      <div className="w-4/5 container mx-auto ml-2 mr-6 p-2 bg-gradient-to-br from-primary5 to-primary5">
+        <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mx-auto" />
+        <h1 className="text-2xl font-semibold text-[#2D90C4] mt-8 text-center mb-6">
+          Réserver votre voiture préférée
+        </h1>
 
         <div className="flex flex-col gap-6 mb-6">
- 
-  <div className="flex flex-wrap gap-4">
-    {/* Sélection Type */}
-    <select
-      className="border rounded-lg border-black p-2 w-full sm:w-auto"
-      value={selectedType}
-      onChange={(e) => setSelectedType(e.target.value)}
-    >
-      <option value="">Sélectionner le type</option>
-      <option value="essence">essence</option>
-      <option value="diesel">diesel</option>
-      <option value="hybride">hybride</option>
-      <option value="électrique">électrique</option>
-    </select>
+          <div className="flex flex-wrap gap-4">
+            <select
+              className="border rounded-lg border-black p-2 w-full sm:w-auto"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+            >
+              <option value="">Sélectionner le type</option>
+              {types.map((type, index) => (
+                <option key={index} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
 
-    <select
-      className="border rounded-lg border-black p-2 w-full sm:w-auto"
-      value={selectedMarque}
-      onChange={(e) => setSelectedMarque(e.target.value)}
-    >
-      <option value="">Sélectionner la marque</option>
-      <option value="Toyota">Toyota</option>
-      <option value="Renault">Renault</option>
-      <option value="Mercedes">Mercedes</option>
-      <option value="Peugeot">Peugeot</option>
-    </select>
+            <select
+              className="border rounded-lg border-black p-2 w-full sm:w-auto"
+              value={selectedMarque}
+              onChange={(e) => setSelectedMarque(e.target.value)}
+            >
+              <option value="">Sélectionner la marque</option>
+              {marques.map((marque, index) => (
+                <option key={index} value={marque}>
+                  {marque}
+                </option>
+              ))}
+            </select>
 
-    <select
-      className="border rounded-lg border-black p-2 w-full sm:w-auto"
-      value={selectedModele}
-      onChange={(e) => setSelectedModele(e.target.value)}
-    >
-      <option value="">Sélectionner le modèle</option>
-      <option value="2020">2020</option>
-      <option value="2021">2021</option>
-      <option value="2022">2022</option>
-      <option value="2023">2023</option>
-      <option value="2024">2024</option>
-    </select>
+            <select
+              className="border rounded-lg border-black p-2 w-full sm:w-auto"
+              value={selectedModele}
+              onChange={(e) => setSelectedModele(e.target.value)}
+            >
+              <option value="">Sélectionner le modèle</option>
+              {modeles.map((modele, index) => (
+                <option key={index} value={modele}>
+                  {modele}
+                </option>
+              ))}
+            </select>
 
-    <input
-      type="text"
-      className="border border-black rounded-lg p-2 flex-1 w-full sm:w-auto"
-      placeholder="Rechercher par prix"
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-    />
-  </div>
+            <input
+              type="text"
+              className="border border-black rounded-lg p-2 flex-1 w-full sm:w-auto"
+              placeholder="Rechercher par prix"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
- 
-  <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4">
+            <input
+              type="date"
+              className="border border-black rounded-lg p-2 w-full sm:w-auto"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+            <input
+              type="date"
+              className="border border-black rounded-lg p-2 w-full sm:w-auto"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+            <button
+              onClick={handleSubmit}
+              type="submit"
+              className="w-full sm:w-20 h-10 border border-black py-2 bg-[#0977BE] text-white rounded-lg"
+            >
+              Search
+            </button>
+          </div>
+        </div>
 
-    <input
-      type="date"
-      className="border border-black rounded-lg p-2 w-full sm:w-auto"
-      value={startDate}
-      onChange={(e) => setStartDate(e.target.value)}
-    />
-
-    
-    <input
-      type="date"
-      className="border border-black  rounded-lg p-2 w-full sm:w-auto"
-      value={endDate}
-      onChange={(e) => setEndDate(e.target.value)}
-    />
-
-    <button
-      onClick={handleSubmit}
-      type="submit"
-      className="w-full sm:w-20 h-10 border border-black py-2 bg-[#0977BE] text-white rounded-lg"
-    >
-      Search
-    </button>
-  </div>
-</div>
-
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 bg-white">
           {filteredCars.length > 0 ? (
             filteredCars.map((car) => (
               <div key={car.id} className="border rounded-lg p-4 shadow-lg">
@@ -200,7 +174,6 @@ const Reservation = () => {
                 <p className="text-lg font-semibold text-green-500">
                   Prix: {car.prix} MAD/jour
                 </p>
-
                 <div className="mt-4 space-x-4">
                   <button
                     onClick={() => handleReservation(car)}

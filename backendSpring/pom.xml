@@ -7,7 +7,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.5</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 
 	<groupId>com.rentalcars</groupId>
@@ -141,6 +141,8 @@
 			<artifactId>stripe-java</artifactId>
 			<version>20.124.0</version>
 		</dependency>
+
+
 
 
 	</dependencies>

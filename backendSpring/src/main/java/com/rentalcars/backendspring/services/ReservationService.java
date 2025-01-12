@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -69,10 +71,6 @@ public class ReservationService {
         return reservation;
     }
 
-    public Long countReservations() {
-        return reservRepository.count();
-    }
-
     public List<Reservation> findByUserId(Long userId) {
         return reservRepository.findByUserId(userId);
     }
@@ -81,7 +79,7 @@ public class ReservationService {
     public List<ReservatDTO> getReservationsByUserId(Long userId) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        List<Reservation> reservations = reservRepository.findByUserId(userId);
+        List<Reservation> reservations = reservRepository.findByUserIdAndStatus(userId,ReservationStatus.COMPLETE);
         return reservations.stream().map(reservation -> {
             ReservatDTO dto = new ReservatDTO();
             dto.setReservationId(reservation.getId());
@@ -148,8 +146,7 @@ public class ReservationService {
     }*/
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-
-
+        
         Optional<User> userOpt = userRepository.findById(reservationRequest.getUserId());
         if (!userOpt.isPresent()) {
             throw new IllegalArgumentException("Utilisateur non trouvé avec l'ID " + reservationRequest.getUserId());
@@ -158,6 +155,39 @@ public class ReservationService {
         Optional<Voiture> voitureOpt = voitureRepository.findById(reservationRequest.getVoitureId());
         if (!voitureOpt.isPresent()) {
             throw new IllegalArgumentException("Voiture non trouvée avec l'ID " + reservationRequest.getVoitureId());
+        }
+
+        boolean voitureDejaReservee = reservRepository.existsByVoitureAndDateDbLessThanEqualAndDateFinGreaterThanEqual(
+                voitureOpt.get(),
+                reservationRequest.getDateFin(),
+                reservationRequest.getDateDb()
+        );
+        if (voitureDejaReservee) {
+            throw new IllegalArgumentException("La voiture est déjà réservée pour la période choisie.");
+        }
+        boolean userReservationConflit = reservRepository.existsByUserAndDateDbLessThanEqualAndDateFinGreaterThanEqual(
+                userOpt.get(),
+                reservationRequest.getDateFin(),
+                reservationRequest.getDateDb()
+        );
+        if (userReservationConflit) {
+            throw new IllegalArgumentException("Vous avez déjà une réservation pendant cette période.");
+        }
+
+        LocalDate dateDb = reservationRequest.getDateDb().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate dateFin = reservationRequest.getDateFin().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate currentDate = LocalDate.now();
+
+        if (dateDb.isAfter(dateFin)) {
+            throw new IllegalArgumentException("La date de début doit être antérieure à la date de fin.");
+        }
+
+        if (dateDb.isBefore(currentDate) || dateFin.isBefore(currentDate)) {
+            throw new IllegalArgumentException("Les dates ne peuvent pas être dans le passé.");
         }
 
 
@@ -197,5 +227,16 @@ reservationResponse.setContratId(c.getId());
         contratRepository.deleteByReservationId(reservationId);
     }
 
+    public Reservation updateReservationStatus(long reservationId) {
+
+        Optional<Reservation> reservationOptional = reservRepository.findById(reservationId);
+
+        if (reservationOptional.isEmpty()) {
+            throw new IllegalArgumentException("Réservation non trouvée");
+        }
+        Reservation reservation = reservationOptional.get();
+        reservation.setStatus(ReservationStatus.COMPLETE);
+        return reservRepository.save(reservation);
+    }
 
 }

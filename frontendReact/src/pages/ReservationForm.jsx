@@ -32,6 +32,8 @@ const ReservationForm = ({ car, onClose }) => {
   useEffect(() => {
     const storedUserInfo = localStorage.getItem("userInfo");
     const idUser = localStorage.getItem("idUser");
+   
+  
 
     if (storedUserInfo) {
       const parsedUserInfo = JSON.parse(storedUserInfo);
@@ -54,17 +56,45 @@ const ReservationForm = ({ car, onClose }) => {
 
 
   const calculateTotalPrice = () => {
-    if (!userInfo.beginDate || !userInfo.endDate || !car.pricePerDay) return 0;
     const beginDate = new Date(userInfo.beginDate);
     const endDate = new Date(userInfo.endDate);
-    const rentalDurationInMilliseconds = endDate - beginDate;
-    const rentalDurationInDays = rentalDurationInMilliseconds / (1000 * 3600 * 24); 
-    const pricePerDay=localStorage.getItem("priceCar");
-    return rentalDurationInDays * pricePerDay; 
+  
+    const durationInMs = endDate - beginDate;
+   
+    const durationInDays = durationInMs / (1000 * 3600 * 24); 
+   
+    const pricePerDay = localStorage.getItem("priceCar"); 
+    
+    const totalPrice = durationInDays * pricePerDay;
+    
+    return totalPrice;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+ 
+    const beginDate = new Date(userInfo.beginDate);
+  const endDate = new Date(userInfo.endDate);
+  const currentDate = new Date();
+
+  
+  if (beginDate < currentDate) {
+    alert("La date de début ne peut pas être dans le passé.");
+    return;
+  }
+
+  if (endDate < currentDate) {
+    alert("La date de fin ne peut pas être dans le passé.");
+    return;
+  }
+
+  if (beginDate >= endDate) {
+    alert("La date de fin doit être après la date de début.");
+    return;
+  }
+
+
     
     const confirmation = window.confirm("Êtes-vous sûr de vouloir effectuer cette réservation ?");
     
@@ -87,6 +117,7 @@ const ReservationForm = ({ car, onClose }) => {
         dateDb: userInfo.beginDate,
         dateFin: userInfo.endDate,
       };
+      
   
       const response = await axios.post(
         "http://localhost:8080/reservation/good",
@@ -184,6 +215,29 @@ const ReservationForm = ({ car, onClose }) => {
     }
   };
 
+
+  const handlePayer = () => {
+    const totalPrice = calculateTotalPrice();
+  
+    console.log("Date de début (dateDb):", userInfo.beginDate);
+    console.log("Date de fin (dateFin):", userInfo.endDate);
+    console.log("prix par",localStorage.getItem("priceCar"));
+    console.log("Prix total de la location:", totalPrice);
+    
+    if (!totalPrice || totalPrice <= 0) {
+      alert("Le prix total est invalide. Veuillez vérifier votre réservation.");
+      return;
+    }
+    navigate("/payer", { 
+      state: { 
+        reservationId, 
+        car, 
+        totalPrice 
+      } 
+    });
+  };
+  
+  
   
 
 
@@ -281,7 +335,7 @@ const ReservationForm = ({ car, onClose }) => {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+              />
           </div>
 
           <div>
@@ -296,7 +350,7 @@ const ReservationForm = ({ car, onClose }) => {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+                />
           </div>
 
           <div className="flex justify-between mt-6">
@@ -355,13 +409,14 @@ const ReservationForm = ({ car, onClose }) => {
   <div className="mt-4">
     <button
       type="button"
-      onClick={() => navigate("/payer", { state: { reservationId, car } })}
+      onClick={handlePayer} 
       className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
     >
       Procéder au paiement
     </button>
   </div>
 )}
+
  
       </div>
     </div>

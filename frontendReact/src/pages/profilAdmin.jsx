@@ -3,6 +3,7 @@ import axios from "axios";
 import { FaSave } from "react-icons/fa";
 import Sidebar from "../components/Dashboard";
 import { useNavigate } from 'react-router-dom'; 
+import SidebarA from "../components/SideBarAdmin";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -12,7 +13,7 @@ const formatDate = (dateString) => {
   return `${year}-${month}-${day}`;
 };
 
-const Profile = () => {
+const ProfileAdmin = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -118,7 +119,7 @@ const Profile = () => {
     <div className="min-h-screen bg-blue-50 flex">
 
 <div className="   w-1/5 h-auto bg-white shadow-md p-0 m-0">
-        <Sidebar />
+        <SidebarA/>
       </div>
       
       <div className="flex-1 p-6">
@@ -187,4 +188,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileAdmin;

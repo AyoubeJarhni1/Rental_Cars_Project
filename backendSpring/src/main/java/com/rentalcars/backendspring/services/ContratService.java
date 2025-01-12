@@ -1,7 +1,7 @@
 package com.rentalcars.backendspring.services;
 
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;  // Correct import
+import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.UnitValue;
@@ -70,11 +70,6 @@ public class ContratService {
         table.addCell(reservation.getUser().getAdress());
         table.addCell("Date de Naissance du Client");
         table.addCell(reservation.getUser().getDateNaiss().toString());
-        table.addCell(" Status de réservation ");
-        table.addCell(reservation.getVoiture().getStatus().toString());
-        table.addCell(" Matricule de voiture  ");
-        table.addCell(reservation.getVoiture().getMatricule().toString());
-
 
         table.addCell("Voiture");
         table.addCell(reservation.getVoiture().getMarque() + " " + reservation.getVoiture().getModele());

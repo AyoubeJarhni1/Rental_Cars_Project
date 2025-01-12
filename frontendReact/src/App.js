@@ -20,12 +20,12 @@ import CarsAdmin from './pages/CarsAdmin';
 import SidebarA from './components/SideBarAdmin';
 import CarsCrud from './pages/carsCrud';
 import Payment from './pages/PaymentForm';
-import DashboardAdmin from './pages/DashboardAdmin';
-import Reports from './components/Reports';
+import DashboardAdmin from './pages/Dashborad_admin';
 
 // Stripe
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import ProfileAdmin from './pages/profilAdmin';
 
 // Load Stripe with your public key
 const stripePromise = loadStripe('pk_test_51Qa4URJ0GcGDS8zCHtvX70c6awf1bVExnHvmKtxIY4nO6eGtdIfCRMVtpqVvcXwoQqXQEgpDYdd6dNCOxyEdzPP700cbDKuDx7');
@@ -46,14 +46,13 @@ function App() {
           <Route path="/reservation-success" element={<ReservationSuccess />} />
           <Route path="/archive" element={<ReservationArchive />} />
           <Route path="/accueil" element={<Dashboard />} />
-          <Route path="/Dashboard_admin" element={<DashboardAdmin />} />
           <Route path="/cars" element={<CarsPage />} />
           <Route path="/password" element={<ChangePassword />} />
           <Route path="/sideAdmin" element={<SidebarA />} />
-          <Route path="/carsAdmin" element={<CarsCrud />} />
-          <Route path="/reports" element={<Reports />} />
+          <Route path="/carsAdmin" element={<CarsCrud/>} />
+          <Route path="/profilAdmin" element={<ProfileAdmin/>} />
+          <Route path="/Dashboard_admin" element={<DashboardAdmin />} />
 
-          {/* Wrap the Payment route with Elements */}
           <Route 
             path="/payer" 
             element={

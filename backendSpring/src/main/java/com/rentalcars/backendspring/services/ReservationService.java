@@ -3,9 +3,8 @@ package com.rentalcars.backendspring.services;
 import com.rentalcars.backendspring.models.*;
 import com.rentalcars.backendspring.payload.request.ReservatDTO;
 import com.rentalcars.backendspring.payload.request.ReservationRequest;
+import com.rentalcars.backendspring.payload.response.ReservationNotific;
 import com.rentalcars.backendspring.payload.response.ReservationResponse;
-import com.rentalcars.backendspring.payload.response.UserResponse;
-import com.rentalcars.backendspring.payload.response.VoitureResponse;
 import com.rentalcars.backendspring.repository.ContratRepository;
 import com.rentalcars.backendspring.repository.ReservRepository;
 import com.rentalcars.backendspring.repository.UserRepository;
@@ -14,9 +13,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -79,7 +78,7 @@ public class ReservationService {
     public List<ReservatDTO> getReservationsByUserId(Long userId) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        List<Reservation> reservations = reservRepository.findByUserIdAndStatus(userId,ReservationStatus.COMPLETE);
+        List<Reservation> reservations = reservRepository.findByUserIdAndStatus(userId, ReservationStatus.COMPLETE);
         return reservations.stream().map(reservation -> {
             ReservatDTO dto = new ReservatDTO();
             dto.setReservationId(reservation.getId());
@@ -146,7 +145,7 @@ public class ReservationService {
     }*/
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        
+
         Optional<User> userOpt = userRepository.findById(reservationRequest.getUserId());
         if (!userOpt.isPresent()) {
             throw new IllegalArgumentException("Utilisateur non trouvé avec l'ID " + reservationRequest.getUserId());
@@ -198,8 +197,8 @@ public class ReservationService {
         reservation.setDateFin(reservationRequest.getDateFin());
         reservation.setStatus(ReservationStatus.EN_COURS);
 
-        Reservation r=reservRepository.save(reservation);
-        ReservationResponse reservationResponse=new ReservationResponse();
+        Reservation r = reservRepository.save(reservation);
+        ReservationResponse reservationResponse = new ReservationResponse();
         reservationResponse.setId(r.getId());
         reservationResponse.setDateDb(r.getDateDb());
         reservationResponse.setDateFin(r.getDateFin());
@@ -211,9 +210,9 @@ public class ReservationService {
         contrat.setReservation(r);
         contrat.setStatut("En attente du paiement");
         contrat.setDateGeneration(new Date());
-        Contrat c=contratRepository.save(contrat);
+        Contrat c = contratRepository.save(contrat);
 
-reservationResponse.setContratId(c.getId());
+        reservationResponse.setContratId(c.getId());
         return reservationResponse;
 
     }
@@ -239,4 +238,79 @@ reservationResponse.setContratId(c.getId());
         return reservRepository.save(reservation);
     }
 
+
+    public List<ReservationNotific> getAllReserva() {
+        List<Reservation> reservations = reservRepository.findAllByStatusOrderByIdDesc(ReservationStatus.COMPLETE);
+
+        return reservations.stream()
+                .map(reservation -> {
+                    ReservationNotific reservationNotific = new ReservationNotific();
+                    reservationNotific.setNameUser(reservation.getUser().getName());
+
+                    if (reservation.getVoiture() != null) {
+                        reservationNotific.setMarqueVoiture(reservation.getVoiture().getMarque());
+                        reservationNotific.setMatriculeVoiture(reservation.getVoiture().getMatricule());
+                    } else {
+
+                        reservationNotific.setMarqueVoiture("Unknown");
+                        reservationNotific.setMatriculeVoiture("Unknown");
+                    }
+
+                    reservationNotific.setDateDb(reservation.getDateDb());
+                    reservationNotific.setDateFin(reservation.getDateFin());
+                    reservationNotific.setDateGeneration(new Date());
+
+                    return reservationNotific;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    public String processReservationsForToday() {
+        LocalDate today = LocalDate.now();
+
+        // Si aucune réservation n'est trouvée, mettre toutes les voitures en DISPONIBLE
+        List<Reservation> reservations = reservRepository.findByDateReservationAAndStatus(today, ReservationStatus.COMPLETE);
+        if (reservations.isEmpty()) {
+            List<Voiture> voitures = voitureRepository.findAll();
+            for (Voiture voiture : voitures) {
+                voiture.setStatus(Voiture.Status.DISPONIBLE);
+                voitureRepository.save(voiture);  // Sauvegarde du statut de la voiture
+            }
+            return "Toutes les voitures sont désormais disponibles.";
+        }
+
+        // Traiter les réservations
+        reservations.forEach(reservation -> {
+            System.out.println("Réservation trouvée : " + reservation.getId());
+
+            Voiture voiture = reservation.getVoiture();
+            if (voiture != null) {
+                // Comparer les dates pour changer le statut de la voiture
+                if (today.isBefore(reservation.getDateDb().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+                    // Si la date actuelle est avant la date de début de réservation
+                    voiture.setStatus(Voiture.Status.DISPONIBLE);
+                    System.out.println("Le statut de la voiture avec l'ID " + voiture.getId() + " a été changé en 'Disponible'.");
+                } else if (today.isAfter(reservation.getDateFin().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+                    // Si la date actuelle est après la date de fin de réservation
+                    voiture.setStatus(Voiture.Status.DISPONIBLE);
+                    System.out.println("Le statut de la voiture avec l'ID " + voiture.getId() + " a été changé en 'Disponible'.");
+                } else {
+                    // Si la réservation est toujours en cours
+                    voiture.setStatus(Voiture.Status.RESERVEE);
+                    System.out.println("Le statut de la voiture avec l'ID " + voiture.getId() + " reste 'Réservée'.");
+                }
+
+                // Sauvegarder l'état mis à jour de la voiture
+                voitureRepository.save(voiture);
+
+            } else {
+                System.out.println("Aucune voiture associée à cette réservation.");
+            }
+        });
+
+        return "Traitement des réservations terminé.";
+    }
+
 }
+

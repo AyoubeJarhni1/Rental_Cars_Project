@@ -14,7 +14,7 @@ function Payment() {
     const location = useLocation();
     const { reservationId, car, totalPrice } = location.state || {};
     console.log("price Total",totalPrice);
-    console.log("price Total1",car.id);
+    console.log("CAR Id",car.id);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -68,7 +68,7 @@ function Payment() {
                     throw new Error("L'ID de la réservation est introuvable.");
                 }
     
-                // Étape 3 : Mise à jour du statut de réservation
+                
                 const statusUpdateResponse = await fetch(`http://localhost:8080/reservation/status/${reservationId}`, {
                     method: "PUT",
                     headers: {

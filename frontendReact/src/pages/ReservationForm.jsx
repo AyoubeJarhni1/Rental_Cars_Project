@@ -63,7 +63,9 @@ const ReservationForm = ({ car, onClose }) => {
    
     const durationInDays = durationInMs / (1000 * 3600 * 24); 
    
-    const pricePerDay = localStorage.getItem("priceCar"); 
+    //const pricePerDay = localStorage.getItem("priceCar"); 
+    const pricePerDay = car.prix;
+    console.log("prix day",pricePerDay);
     
     const totalPrice = durationInDays * pricePerDay;
     
@@ -221,7 +223,7 @@ const ReservationForm = ({ car, onClose }) => {
   
     console.log("Date de début (dateDb):", userInfo.beginDate);
     console.log("Date de fin (dateFin):", userInfo.endDate);
-    console.log("prix par",localStorage.getItem("priceCar"));
+    console.log("prix par",car.prix);
     console.log("Prix total de la location:", totalPrice);
     
     if (!totalPrice || totalPrice <= 0) {

@@ -1,5 +1,7 @@
 package com.rentalcars.backendspring.payload.response;
 
+import com.rentalcars.backendspring.models.Voiture;
+
 public class VoitureResponse {
     private Long id;
     private String marque;
@@ -7,11 +9,16 @@ public class VoitureResponse {
     private String type;
     private int prix;
     private String pathimage;
-
+    private Voiture.Status status;
 
     public void setId(long id) {
         this.id=id ;
     }
+
+    public void setStatus(Voiture.Status status) {
+        this.status=status;
+    }
+
 
     public void setMarque(String marque) {
         this.marque=marque;

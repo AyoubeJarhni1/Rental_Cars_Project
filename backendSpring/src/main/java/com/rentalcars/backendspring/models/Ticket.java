@@ -1,10 +1,8 @@
 package com.rentalcars.backendspring.models;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
-
 @Entity
 public class Ticket {
 
@@ -43,5 +41,11 @@ public class Ticket {
             this.priceTotal = priceTotal;
     }
 
+public void setDateGeneration(Date dateGeneration) {
+        this.dateGeneration = dateGeneration;
+}
+public Date getDateGeneration() {
+        return dateGeneration;
+}
 
 }

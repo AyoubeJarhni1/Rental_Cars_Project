@@ -15,15 +15,12 @@ public class Reservation {
     private Date dateFin;
 
     @ManyToOne
-
     @JoinColumn (name = "voiture_id")
     Voiture voiture;
 
     @ManyToOne
     @JoinColumn(name="user-id")
     User user ;
-
-
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status = ReservationStatus.EN_COURS;
@@ -72,5 +69,6 @@ public class Reservation {
  public ReservationStatus getStatus() {
             return status;
  }
+
 
 }

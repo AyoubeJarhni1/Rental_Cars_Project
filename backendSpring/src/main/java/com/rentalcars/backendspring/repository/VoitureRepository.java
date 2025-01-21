@@ -1,6 +1,7 @@
 package com.rentalcars.backendspring.repository;
 
 
+import com.rentalcars.backendspring.models.Reservation;
 import com.rentalcars.backendspring.models.Voiture;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;

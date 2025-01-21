@@ -29,7 +29,7 @@ const Login = () => {
       if (role === "ROLE_ADMIN") {
         navigate("/carsAdmin");
       } else if (role === "ROLE_USER") {
-        navigate("/accueil");
+        navigate("/profil");
       } else {
         alert("Rôle non reconnu");
       }

@@ -197,5 +197,28 @@ return voitureDTOs;
     }
 
 
+    public String updateCarStatus(Long id, Voiture.Status status) {
+        if (status == null) {
+            logger.debug("Statut invalide fourni : null");
+            return "Le statut fourni est invalide.";
+        }
+
+        Voiture voiture = voitureRepository.findById(id).orElse(null);
+
+        if (voiture == null) {
+            logger.debug("Voiture non trouvée pour l'ID : {}", id);
+            return "Aucune voiture trouvée pour l'ID : " + id;
+        }
+
+        voiture.setStatus(status);
+        voitureRepository.save(voiture);
+        logger.debug("Le statut de la voiture avec l'ID {} a été mis à jour en '{}'", id, status);
+
+        return "Le statut de la voiture avec l'ID " + id + " a été mis à jour avec succès en '" + status + "'";
+    }
+
+
+
+
 
 }

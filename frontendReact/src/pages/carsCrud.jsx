@@ -161,13 +161,14 @@ const CarsCrud = () => {
 
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-primary5">
       <div className="w-1/5 h-screen bg-white shadow-md p-0 m-0">
         <SidebarA/>
       </div>
 
       <div className="w-4/5 container mx-auto ml-2 mr-6 p-2">
-        <h1 className="text-2xl font-semibold text-center mb-6">Manage Cars</h1>
+      <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mt-4 mx-auto" />
+        <h1 className="text-2xl font-semibold text-[#2D90C4] text-center  mb-6">Manage Cars</h1>
 
         <button
           onClick={handleAddCarClick}
@@ -437,7 +438,7 @@ const CarsCrud = () => {
         </div>
 
         {/* Cars Listing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-white gap-6">
           {filteredCars.length > 0 ? (
             filteredCars.map((car) => (
               <div key={car.id} className="border rounded-lg p-4 shadow-lg">

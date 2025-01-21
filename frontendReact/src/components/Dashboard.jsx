@@ -1,7 +1,8 @@
 import React from "react";
 import { HomeIcon, ArchiveBoxIcon, CalendarIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Navigate, useNavigate } from "react-router-dom";
-
+import { FaCar,FaWrench ,FaSignOutAlt, FaTachometerAlt} from 'react-icons/fa';
+import {  FaArchive, FaCalendarAlt } from 'react-icons/fa';
 const Sidebar = () => {
 
   const navigate = useNavigate();
@@ -33,11 +34,11 @@ const Sidebar = () => {
           Accueil
         </a>
         <a href="/archive" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
-          <ArchiveBoxIcon className="h-6 w-6" />
+          < FaArchive className="h-5 w-5" />
           Archive
         </a>
         <a href="/reservation" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
-          <CalendarIcon className="h-6 w-6" />
+          <FaCalendarAlt className="h-5 w-5" />
           Réservation
         </a>
         <a href="/profil" className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded">
@@ -49,7 +50,7 @@ const Sidebar = () => {
           onClick={handleLogout}
           className="flex items-center gap-2 hover:bg-blue-700 p-2 rounded"
         >
-          <UserIcon className="h-6 w-6" />
+          <FaSignOutAlt className="h-6 w-6" />
           Logout
         </button>
       </nav>

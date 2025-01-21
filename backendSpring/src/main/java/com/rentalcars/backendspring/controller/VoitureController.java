@@ -4,6 +4,9 @@ import com.rentalcars.backendspring.models.Voiture;
 import com.rentalcars.backendspring.payload.request.DateRangeRequest;
 import com.rentalcars.backendspring.payload.response.VoitureDTO;
 import com.rentalcars.backendspring.services.VoitureService;
+import org.jboss.logging.BasicLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/voitures")
@@ -22,6 +26,9 @@ public class VoitureController {
     public VoitureController(VoitureService voitureService) {
         this.voitureService = voitureService;
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(VoitureController.class);
+
 
     @GetMapping("/all")
     public ResponseEntity<List<Voiture>> getAllVoitures() {
@@ -91,6 +98,27 @@ public class VoitureController {
         }
         return ResponseEntity.ok(voitures);
     }
+
+
+    @PutMapping("/status/{id}")
+    public ResponseEntity<String> updateCarStatus(@PathVariable Long id, @RequestBody Map<String, String> requestBody) {
+        String status = requestBody.get("status");
+
+        try {
+
+            Voiture.Status parsedStatus = Voiture.Status.valueOf(status.toUpperCase());
+            String response = voitureService.updateCarStatus(id, parsedStatus);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            logger.debug("Statut fourni invalide : {}", status, e);
+            return ResponseEntity.badRequest().body("Statut invalide fourni : " + status);
+        } catch (Exception e) {
+            logger.error("Une erreur est survenue lors de la mise à jour du statut pour l'ID {}", id, e);
+            return ResponseEntity.status(500).body("Une erreur interne est survenue.");
+        }
+    }
+
+
 
 
 }

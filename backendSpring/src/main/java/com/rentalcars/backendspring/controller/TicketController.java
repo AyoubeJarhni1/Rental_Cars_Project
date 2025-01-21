@@ -21,6 +21,18 @@ public class TicketController {
     }
 
 
+    @PostMapping("/createTicket")
+    public ResponseEntity<TicketResponse> createTicket(
+            @RequestParam Long reservationId,
+            @RequestParam Float priceTotal) {
+        try {
+            TicketResponse ticketResponse = ticketService.createTicket(reservationId, priceTotal);
+            return ResponseEntity.ok(ticketResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @PostMapping("/tickets")
     public ResponseEntity<byte[]> createTicket(@RequestBody RequestTicket requestTicket) {
         try {
@@ -44,10 +56,9 @@ public class TicketController {
 
             logger.error("Erreur lors de la création ou génération du ticket : ", e);
 
-            // Retourner une réponse avec le statut 500 et un message d'erreur
+
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            // Capturer toutes les autres exceptions
             logger.error("Erreur générale : ", e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

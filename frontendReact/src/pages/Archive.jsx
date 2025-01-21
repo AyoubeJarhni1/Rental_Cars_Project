@@ -76,7 +76,7 @@ const ReservationArchive = () => {
       </div>
 
       <div className="w-4/5 container mx-auto ml-2 mr-6 p-2">
-        <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mx-auto" />
+        <img src="/logo1.jpg" alt="Logo" className="h-16 w-20 rounded-lg mt-4 mx-auto" />
         <h1 className="text-2xl font-semibold text-primary3 text-center mb-6">
           Archive de vos réservations
         </h1>

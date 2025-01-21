@@ -41,7 +41,7 @@ const Dashboard = () => {
           const popular = Object.entries(mostPopular).sort((a, b) => b[1] - a[1])[0];
           setPopularCar(popular ? popular[0] : null);
 
-          // Calcul des prix totaux par voiture
+         
           const prices = reservations.reduce((acc, curr) => {
             const totalPrice = curr.prix; // Assumes 'prix' is the field containing the price of the reservation
             if (acc[curr.marque]) {
@@ -82,7 +82,7 @@ const Dashboard = () => {
         <Sidebar />
       </div>
       <div className="w-4/5 container mx-auto ml-2 mr-6 p-4">
-        <h1 className="text-2xl font-bold mt-6 text-center mb-6 text-[#2D90C4]">Bienvenue sur votre Dashboard</h1>
+        <h1 className="text-2xl font-bold mt-6 text-center mb-6 text-[#2D90C4]">Bienvenue sur votre Tableau de bord</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           <div className="bg-white p-4 rounded-lg shadow-lg">

@@ -41,6 +41,8 @@ public class TicketService {
 
     public TicketResponse createTicket(Long reservationId, Float priceTotal) {
 
+        LocalDateTime currentDate = LocalDateTime.now();
+        Date currentDateAsDate = java.util.Date.from(currentDate.atZone(java.time.ZoneId.systemDefault()).toInstant());
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new RuntimeException("Réservation non trouvée"));
         User user = reservation.getUser();
@@ -49,8 +51,7 @@ public class TicketService {
         Ticket ticket = new Ticket();
         ticket.setReservation(reservation);
         ticket.setPriceTotal(priceTotal);
-
-
+        ticket.setDateGeneration(currentDateAsDate);
         ticket = ticketRepository.save(ticket);
 
         TicketResponse ticketResponse = new TicketResponse();
@@ -62,6 +63,8 @@ public class TicketService {
         ticketResponse.setNTele(user.getnTele());
         ticketResponse.setMatricule(voiture.getMatricule());
         ticketResponse.setMarqueCar(voiture.getMarque());
+        ticketResponse.setDateGeneration(ticket.getDateGeneration());
+
 
 
         generateTicketPdf(ticketResponse);
@@ -73,14 +76,13 @@ public class TicketService {
     @Value("${pdf.file.path}")
     private String pdfFilePath;
 
-
     public byte[] generateTicketPdf(TicketResponse ticketResponse) {
         try {
             LocalDateTime currentDate = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             String formattedDate = currentDate.format(formatter);
 
-            // Utilisation d'un ByteArrayOutputStream pour capturer le PDF en mémoire
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfWriter writer = new PdfWriter(outputStream);
             com.itextpdf.kernel.pdf.PdfDocument pdfDocument = new com.itextpdf.kernel.pdf.PdfDocument(writer);
@@ -125,12 +127,14 @@ public class TicketService {
 
             document.close();
 
-            // Retourner le contenu du PDF sous forme de byte[]
+
             return outputStream.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la génération du PDF : " + e.getMessage());
         }
     }
+
+
 
 
 

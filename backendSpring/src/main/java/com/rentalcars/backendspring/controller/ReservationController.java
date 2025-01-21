@@ -4,6 +4,7 @@ import com.rentalcars.backendspring.models.Reservation;
 
 import com.rentalcars.backendspring.payload.request.ReservatDTO;
 import com.rentalcars.backendspring.payload.request.ReservationRequest;
+import com.rentalcars.backendspring.payload.response.ReservationNotific;
 import com.rentalcars.backendspring.payload.response.ReservationResponse;
 import com.rentalcars.backendspring.services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,5 +151,21 @@ public class ReservationController {
         reservationService.updateReservationStatus(reservationId);
         return "Updated successfully";
     }
+
+    @GetMapping("/notifications")
+    public List<ReservationNotific> getReservationNotifications() {
+        return reservationService.getAllReserva();
+    }
+
+
+    @GetMapping("/process-today")
+    public String processReservationsForToday() {
+        try {
+            return reservationService.processReservationsForToday();
+        } catch (Exception e) {
+            return "Erreur lors du traitement des réservations : " + e.getMessage();
+        }
+    }
+
 
 }

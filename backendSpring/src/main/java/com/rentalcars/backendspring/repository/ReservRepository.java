@@ -40,5 +40,12 @@ public interface ReservRepository extends JpaRepository<Reservation,Long> {
 
     boolean existsByVoitureAndDateDbLessThanEqualAndDateFinGreaterThanEqual(Voiture voiture, Date dateFin, Date dateDb);
     boolean existsByUserAndDateDbLessThanEqualAndDateFinGreaterThanEqual(User user, Date dateFin, Date dateDb);
+
+
+    List<Reservation> findAllByStatusOrderByIdDesc(ReservationStatus status);
+
+    @Query("SELECT r FROM Reservation r WHERE (DATE(:currentDate) = DATE(r.dateDb) OR (DATE(:currentDate) BETWEEN DATE(r.dateDb) AND DATE(r.dateFin))) AND r.status = :status")
+    List<Reservation> findByDateReservationAAndStatus(@Param("currentDate") LocalDate currentDate, @Param("status") ReservationStatus status);
+
 }
 

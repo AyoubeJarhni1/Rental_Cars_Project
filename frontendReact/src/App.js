@@ -25,6 +25,10 @@ import Payment from './pages/PaymentForm';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import ProfileAdmin from './pages/profilAdmin';
+import Maintenance from './pages/maintenance';
+import NewReservationNotification from './pages/Notification';
+import DashboardA from './pages/DashboardA';
+
 
 // Load Stripe with your public key
 const stripePromise = loadStripe('pk_test_51Qa4URJ0GcGDS8zCHtvX70c6awf1bVExnHvmKtxIY4nO6eGtdIfCRMVtpqVvcXwoQqXQEgpDYdd6dNCOxyEdzPP700cbDKuDx7');
@@ -50,6 +54,9 @@ function App() {
           <Route path="/sideAdmin" element={<SidebarA />} />
           <Route path="/carsAdmin" element={<CarsCrud/>} />
           <Route path="/profilAdmin" element={<ProfileAdmin/>} />
+          <Route path="/maintenance" element={<Maintenance/>} />
+          <Route path="/notifier" element={<NewReservationNotification/>} />
+          <Route path="/Dashborad_admin" element={<DashboardA/>} />
 
           <Route 
             path="/payer" 

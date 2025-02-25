@@ -50,7 +50,7 @@ Un système de gestion de location de voitures comprenant deux espaces : un espa
 - Maven .  
 - MySQL.  
 
-### **2. Configuration du Backend**  
+### **2. Configuration du projet **  
 1. Clonez le repository :  
    ```bash
    git clone https://github.com/AyoubeJarhni1/Rental_Cars_Project

@@ -59,20 +59,20 @@ Un système de gestion de location de voitures comprenant deux espaces : un espa
 2. Ouvrir le dossier backend  du projet  dans IntelliJ IDEA ou Eclipse :
 
 IntelliJ IDEA :
-Ouvrez IntelliJ et sélectionnez "Open", puis choisissez le dossier backendSpring.
-Attendez que Maven télécharge les dépendances.
+- Ouvrez IntelliJ et sélectionnez "Open", puis choisissez le dossier backendSpring.
+- Attendez que Maven télécharge les dépendances.
 Eclipse :
-Importez le projet en sélectionnant "File" > "Import" > "Existing Maven Projects".
-Sélectionnez le dossier backendSpring et cliquez sur Finish.
-puis cliquer sur run et choisir tomcat comme serveur si vous ne l'avez pas téléchargez tomcat et le projet av étre démarré 
+ - Importez le projet en sélectionnant "File" > "Import" > "Existing Maven Projects".
+- Sélectionnez le dossier backendSpring et cliquez sur Finish.
+- puis cliquer sur run et choisir tomcat comme serveur si vous ne l'avez pas téléchargez tomcat et le projet av étre démarré 
 
 3. Créer la base de données MySQL :
 
-Ouvrez phpMyAdmin ou mysql Workbench  et exécutez :
-CREATE DATABASE rental_cars;
+- Ouvrez phpMyAdmin ou mysql Workbench  et exécutez :
+- CREATE DATABASE rental_cars;
 ensuite les tables de base de donnée seront crées automatiquement lorsque le serveur backend va démarrer 
 
 4 . Ouvrir le dossier frontend  du projet dans vscode 
-ouvrir terminal puis tappe npm install 
-taper npm start pour démarrer le projet va étre lancé dans un navigateur automatiquement 
+- ouvrir terminal puis tappe npm install 
+- taper npm start pour démarrer le projet va étre lancé dans un navigateur automatiquement 
 
